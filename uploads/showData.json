@@ -376,5 +376,14 @@
         }
       ]
     }
+  ],
+  "profiles": [
+    {
+      "id": "9629c006-5df1-4be4-986a-616f8dd6e2de",
+      "name": "Prajyot",
+      "avatar": "😊",
+      "color": "#e50914",
+      "createdAt": "2025-12-27T04:29:29.466Z"
+    }
   ]
 }

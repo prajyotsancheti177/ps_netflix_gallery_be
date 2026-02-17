@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const fs = require('fs');
+const connectDB = require('./config/db');
 const apiRoutes = require('./routes/api');
 
 const app = express();
@@ -34,40 +34,21 @@ if (isProduction) {
     console.log('🚀 Running in PRODUCTION mode - serving static files from client/dist');
 }
 
-// Create uploads directory for showData.json only
-const uploadsDir = path.join(__dirname, 'uploads');
-if (!fs.existsSync(uploadsDir)) {
-    fs.mkdirSync(uploadsDir, { recursive: true });
-    console.log(`Created directory: ${uploadsDir}`);
-}
-
-// Initialize show data file if it doesn't exist
-const showDataPath = path.join(__dirname, 'uploads', 'showData.json');
-if (!fs.existsSync(showDataPath)) {
-    const defaultData = {
-        showTitle: 'The Story of My Life',
-        episodeCount: 1,
-        episodes: [{
-            title: 'Episode 1',
-            thumbnail: null,
-            media: []
-        }]
-    };
-    fs.writeFileSync(showDataPath, JSON.stringify(defaultData, null, 2));
-    console.log('Created default show data file');
-}
-
-// Start server
-app.listen(PORT, () => {
-    console.log(`
+// Connect to MongoDB and start server
+const startServer = async () => {
+    await connectDB();
+    
+    app.listen(PORT, () => {
+        console.log(`
 ╔══════════════════════════════════════════════════════════════╗
 ║                                                              ║
 ║   🎬 Netflix Life Story API Server                           ║
 ║                                                              ║
 ║   API running at: http://localhost:${PORT}                     ║
 ║                                                              ║
-║   Start the React app with: cd client && npm run dev         ║
-║                                                              ║
 ╚══════════════════════════════════════════════════════════════╝
-    `);
-});
+        `);
+    });
+};
+
+startServer();
